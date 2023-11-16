@@ -23,3 +23,143 @@ rb_tree_t *rb_tree_node(rb_tree_t *parent, int value, rb_color_t color)
 
 	return (new_node);
 }
+
+/**
+ * rb_tree_rotate_right - balances tree by rotating right
+ * @node: tree to balance
+ * Return: pointer to tree
+ */
+rb_tree_t *rb_tree_rotate_right(rb_tree_t *node)
+{
+    rb_tree_t *x, *y;
+
+    if (!node || !node->left)
+        return node;
+
+    x = node->left;
+    y = x->right;
+
+    x->right = node;
+    node->left = y;
+    if (y)
+        y->parent = node;
+
+    if (node->parent)
+    {
+        if (node->parent->left == node)
+            node->parent->left = x;
+        else
+            node->parent->right = x;
+    }
+
+    x->parent = node->parent;
+    node->parent = x;
+
+    return x;
+}
+
+/**
+ * rb_tree_rotate_left - balances tree by rotating left
+ * @node: tree to balance
+ * Return: pointer to tree
+ */
+rb_tree_t *rb_tree_rotate_left(rb_tree_t *node)
+{
+    rb_tree_t *x, *y;
+
+    if (!node || !node->right)
+        return node;
+
+    x = node->right;
+    y = x->left;
+
+    x->left = node;
+    node->right = y;
+    if (y)
+        y->parent = node;
+
+    if (node->parent)
+    {
+        if (node->parent->left == node)
+            node->parent->left = x;
+        else
+            node->parent->right = x;
+    }
+
+    x->parent = node->parent;
+    node->parent = x;
+
+    return x;
+}
+
+/**
+* rb_tree_rotate_right - balances tree by rotating right
+* @tree: tree to balance
+* Return: pointer to tree
+
+rb_tree_t *rb_tree_rotate_right(rb_tree_t *tree)
+{
+	rb_tree_t *old = NULL, *new = NULL, *temp = NULL;
+
+	if (!tree || !tree->left)
+		return (tree);
+	old = tree;
+	new = tree->left;
+	if (old->parent)
+	{
+		if (old == old->parent->right)
+			old->parent->right = new;
+		else
+			old->parent->left = new;
+		temp = old->parent;
+	}
+	old->parent = new;
+	if (new->right)
+	{
+		old->left = new->right;
+		new->right->parent = old;
+	}
+	else
+		old->left = NULL;
+	new->right = old;
+	new->parent = temp;
+	if (old->left)
+		old->left->parent = old;
+	return (new);
+}
+
+
+* rb_tree_rotate_left - balances tree by rotating left
+* @tree: tree to balance
+* Return: pointer to tree
+
+rb_tree_t *rb_tree_rotate_left(rb_tree_t *tree)
+{
+	rb_tree_t *old = NULL, *new = NULL, *temp = NULL;
+
+	if (!tree || !tree->right)
+		return (tree);
+	old = tree;
+	new = tree->right;
+	if (old->parent)
+	{
+		if (old == old->parent->left)
+			old->parent->left = new;
+		else
+			old->parent->right = new;
+		temp = old->parent;
+	}
+	old->parent = new;
+	if (new->left)
+	{
+		old->right = new->left;
+		new->left->parent = old;
+	}
+	else
+		old->right = NULL;
+	new->left = old;
+	new->parent = temp;
+	if (old->right)
+		old->right->parent = old;
+	return (new);
+}*/
