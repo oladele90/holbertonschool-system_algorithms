@@ -57,14 +57,11 @@ rb_tree_t *rb_tree_rotate_left(rb_tree_t *node)
 
     if (!node || !node->right)
     {
-        printf("Invalid node or no right child.\n");
         return node;
     }
 
     x = node->right;
     y = x->left;
-
-    printf("node: %p, x: %p, y: %p\n", (void *)node, (void *)x, (void *)y);
 
     if (y)
     {
