@@ -75,45 +75,41 @@ static int check_left(rb_tree_t *node)
     return(node == node->parent->left);
 }
 
-static rb_tree_t *fix_black_uncle(rb_tree_t *gp, rb_tree_t *new, rb_tree_t
-                                    *uncle, rb_tree_t *parent)
+static rb_tree_t *fix_black_uncle(rb_tree_t *gp, rb_tree_t *new, rb_tree_t *parent)
 {
-    /*left left case*/
-    if (check_left(new) && check_left(new->parent) && (uncle || !uncle))
-    {
+    /* Left Left case */
+    if (check_left(new) && check_left(parent)) {
         rb_tree_rotate_right(gp);
-        new->color = BLACK;
+        parent->color = BLACK;
         gp->color = RED;
     }
-
-    /*lefr right case*/
-    else if (check_left(new->parent) && !check_left(new))
-    {
+    /* Left Right case */
+    else if (check_left(parent) && !check_left(new)) {
         rb_tree_rotate_left(parent);
+        new = new->parent;
         rb_tree_rotate_right(gp);
+        new->color = BLACK;
         gp->color = RED;
-        parent->color = BLACK;
     }
-
-    /*right right case*/
-    else if (!check_left(new) && !check_left(new->parent))
-    {
+    /* Right Right case */
+    else if (!check_left(parent) && !check_left(new)) {
         rb_tree_rotate_left(gp);
         parent->color = BLACK;
         gp->color = RED;
     }
-
-    /*right left case*/
-    else if (!check_left(new->parent) && check_left(new))
-    {
+    /* Right Left case */
+    else if (!check_left(parent) && check_left(new)) {
         rb_tree_rotate_right(parent);
+        new = new->parent;
         rb_tree_rotate_left(gp);
         new->color = BLACK;
         gp->color = RED;
     }
-    return (new);
 
+    return gp;
 }
+
+
 
 static rb_tree_t *insert_help(rb_tree_t *tree, rb_tree_t *new)
 {
@@ -130,7 +126,7 @@ static rb_tree_t *insert_help(rb_tree_t *tree, rb_tree_t *new)
     {
         gp = new->parent->parent;
         parent = new->parent;
-        new = fix_black_uncle(gp, new, uncle, parent);
+        new = fix_black_uncle(gp, new, parent);
     }
 
     return (tree);

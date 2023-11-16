@@ -31,29 +31,17 @@ rb_tree_t *rb_tree_node(rb_tree_t *parent, int value, rb_color_t color)
  */
 rb_tree_t *rb_tree_rotate_right(rb_tree_t *node)
 {
-    rb_tree_t *x, *y;
+    rb_tree_t *x = node->left;
+    rb_tree_t *y = x->right;
 
-    if (!node || !node->left)
+	if (!node || !node->left)
         return node;
-
-    x = node->left;
-    y = x->right;
-
     x->right = node;
     node->left = y;
+    node->parent = x;
+
     if (y)
         y->parent = node;
-
-    if (node->parent)
-    {
-        if (node->parent->left == node)
-            node->parent->left = x;
-        else
-            node->parent->right = x;
-    }
-
-    x->parent = node->parent;
-    node->parent = x;
 
     return x;
 }
@@ -68,29 +56,35 @@ rb_tree_t *rb_tree_rotate_left(rb_tree_t *node)
     rb_tree_t *x, *y;
 
     if (!node || !node->right)
+    {
+        printf("Invalid node or no right child.\n");
         return node;
+    }
 
     x = node->right;
     y = x->left;
 
-    x->left = node;
-    node->right = y;
+    printf("node: %p, x: %p, y: %p\n", (void *)node, (void *)x, (void *)y);
+
     if (y)
-        y->parent = node;
-
-    if (node->parent)
     {
-        if (node->parent->left == node)
-            node->parent->left = x;
-        else
-            node->parent->right = x;
+        x->left = node;
+        node->right = y;
+        node->parent = x;
+        if (y)
+            y->parent = node;
     }
-
-    x->parent = node->parent;
-    node->parent = x;
+    else
+    {
+        x->left = node;
+        node->right = NULL;
+        node->parent = x;
+    }
 
     return x;
 }
+
+
 
 /**
 * rb_tree_rotate_right - balances tree by rotating right
