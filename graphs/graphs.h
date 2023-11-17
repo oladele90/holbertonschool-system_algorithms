@@ -2,6 +2,7 @@
 #define _graphs_h_
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 
 
@@ -73,6 +74,8 @@ typedef struct graph_s
 
 void graph_display(const graph_t *graph);
 graph_t *graph_create(void);
+vertex_t *graph_add_vertex(graph_t *graph, const char *str);
+vertex_t *build_vertex(vertex_t* vertex, const char *str);
 
 
 #endif
