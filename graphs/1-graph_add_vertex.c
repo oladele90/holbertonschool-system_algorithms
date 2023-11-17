@@ -8,9 +8,7 @@ vertex_t *graph_add_vertex(graph_t *graph, const char *str)
     temp = graph->vertices;
     if (!temp)
     {
-        printf("temp is null\n");
         vertex = build_vertex(vertex, str);
-        printf("%s\n", vertex->content);
         graph->vertices = vertex;
         graph->nb_vertices++;
         return (vertex);
@@ -25,7 +23,8 @@ vertex_t *graph_add_vertex(graph_t *graph, const char *str)
         if (strcmp(str, temp->content) == 0)
             return (NULL);
         vertex = build_vertex(vertex, str);
-        temp = vertex;
+        vertex->index = temp->index + 1;
+        temp->next = vertex;
         graph->nb_vertices++;
     }
     return (vertex);
