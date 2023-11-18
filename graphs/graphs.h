@@ -72,9 +72,11 @@ graph_t *graph_create(void);
 vertex_t *graph_add_vertex(graph_t *graph, const char *str);
 int graph_add_edge(graph_t *graph, const char *src,
 				   const char *dest, edge_type_t type);
+void graph_delete(graph_t *graph);
 /* Utils */
 vertex_t *build_vertex(vertex_t *vertex, const char *str);
 vertex_t *find_vertex(graph_t *graph, const char *content);
 edge_t *edge_create(vertex_t *from, vertex_t *to, edge_t *edge);
+void free_edges(vertex_t *vertex_surfer);
 
-#endif /* _GRAPHS_H_ */
+#endif
