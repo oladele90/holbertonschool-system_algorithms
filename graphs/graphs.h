@@ -1,11 +1,9 @@
-#ifndef _graphs_h_
-#define _graphs_h_
+#ifndef _GRAPHS_H_
+#define _GRAPHS_H_
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
-
-
 
 /**
  * enum edge_type_e - Enumerates the different types of
@@ -16,8 +14,8 @@
  */
 typedef enum edge_type_e
 {
-    UNIDIRECTIONAL = 0,
-    BIDIRECTIONAL
+	UNIDIRECTIONAL = 0,
+	BIDIRECTIONAL
 } edge_type_t;
 
 /* Define the structure temporarily for usage in the edge_t */
@@ -32,29 +30,28 @@ typedef struct vertex_s vertex_t;
  */
 typedef struct edge_s
 {
-    vertex_t    *dest;
-    struct edge_s   *next;
+	vertex_t *dest;
+	struct edge_s *next;
 } edge_t;
-
 
 /**
  * struct vertex_s - Node in the linked list of vertices in the adjacency list
  *
  * @index: Index of the vertex in the adjacency list.
  * @content: Custom data stored in the vertex (here, a string)
- * @nb_edges: Number of conenctions with other vertices in the graph
+ * @nb_edges: Number of connections with other vertices in the graph
  * @edges: Pointer to the head node of the linked list of edges
  * @next: Pointer to the next vertex in the adjacency linked list
- *   This pointer points to another vertex in the graph, but it
- *   doesn't stand for an edge between the two vertices
+ *        This pointer points to another vertex in the graph, but it
+ *        doesn't stand for an edge between the two vertices
  */
 struct vertex_s
 {
-    size_t      index;
-    char        *content;
-    size_t      nb_edges;
-    edge_t      *edges;
-    struct vertex_s *next;
+	size_t index;
+	char *content;
+	size_t nb_edges;
+	edge_t *edges;
+	struct vertex_s *next;
 };
 
 /**
@@ -66,21 +63,18 @@ struct vertex_s
  */
 typedef struct graph_s
 {
-    size_t      nb_vertices;
-    vertex_t    *vertices;
+	size_t nb_vertices;
+	vertex_t *vertices;
 } graph_t;
-
-
 
 void graph_display(const graph_t *graph);
 graph_t *graph_create(void);
 vertex_t *graph_add_vertex(graph_t *graph, const char *str);
-int graph_add_edge(graph_t *graph, const char *src, const char *dest, edge_type_t type);
-/*utils*/
-vertex_t *build_vertex(vertex_t* vertex, const char *str);
+int graph_add_edge(graph_t *graph, const char *src,
+				   const char *dest, edge_type_t type);
+/* Utils */
+vertex_t *build_vertex(vertex_t *vertex, const char *str);
 vertex_t *find_vertex(graph_t *graph, const char *content);
 edge_t *edge_create(vertex_t *from, vertex_t *to, edge_t *edge);
 
-
-
-#endif
+#endif /* _GRAPHS_H_ */
