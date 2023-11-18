@@ -21,7 +21,7 @@ int graph_add_edge(graph_t *graph, const char *src, const char *dest, edge_type_
         to->edges = edge_create(to, from, edge);
         to->nb_edges++;
     }
-    printf("%lu\n", from->nb_edges);
+
     return (1);
 
 }
@@ -55,7 +55,6 @@ vertex_t *find_vertex(graph_t *graph, const char *content)
         return (temp);
     while (temp->next)
     {
-        printf("loop%d\n", i);
         if (strcmp(content, temp->content) == 0)
             return (temp);
         temp = temp->next;
