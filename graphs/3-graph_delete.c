@@ -10,7 +10,11 @@ void graph_delete(graph_t *graph)
 
 	if (!graph)
 		return;
-
+	if (!graph->vertices)
+		{
+			free(graph);
+			return;
+		}
 	while (graph->nb_vertices > 1)
 	{
 		vertex_surfer = graph->vertices;
