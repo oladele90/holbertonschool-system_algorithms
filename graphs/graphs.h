@@ -73,10 +73,12 @@ vertex_t *graph_add_vertex(graph_t *graph, const char *str);
 int graph_add_edge(graph_t *graph, const char *src,
 				   const char *dest, edge_type_t type);
 void graph_delete(graph_t *graph);
+size_t depth_first_traverse(const graph_t *graph, void (*action)(const vertex_t *v, size_t depth));
 /* Utils */
 vertex_t *build_vertex(vertex_t *vertex, const char *str);
 vertex_t *find_vertex(graph_t *graph, const char *content);
 edge_t *edge_create(vertex_t *from, vertex_t *to, edge_t *edge);
 void free_edges(vertex_t *vertex_surfer);
+size_t dfs_recursive(vertex_t *vertex, int *visited, size_t depth, void (*action)(const vertex_t *v, size_t depth), size_t max_depth);
 
 #endif
