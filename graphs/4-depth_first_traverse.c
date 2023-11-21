@@ -45,7 +45,7 @@ size_t dfs_recursive(vertex_t *vertex, int *visited, size_t depth,
 size_t depth_first_traverse(const graph_t *graph,
 							void (*action)(const vertex_t *v, size_t depth))
 {
-	vertex_t *current_vertex = graph->vertices;
+	vertex_t *current_vertex;
 	size_t depth = 0;
 	int *visited;
 	size_t max_depth = 0;
@@ -53,6 +53,7 @@ size_t depth_first_traverse(const graph_t *graph,
 	if (!graph || !action || !graph->vertices)
 		return (0);
 	visited = calloc(graph->nb_vertices, sizeof(int));
+	current_vertex = graph->vertices;
 
 	depth = dfs_recursive(current_vertex, visited, depth, action, max_depth);
 
