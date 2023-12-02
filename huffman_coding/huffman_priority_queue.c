@@ -11,15 +11,15 @@
  */
 int data_cmp(void *f1, void *f2)
 {
-	int n1, n2;
-	symbol_t *one, *two;
+	symbol_t *n1, *n2;
+	binary_tree_node_t *one, *two;
 
-	one = (symbol_t *)f1;
-	two = (symbol_t *)f2;
-	n1 = (int)one->freq;
-	n2 = (int)two->freq;
+	one = (binary_tree_node_t *)f1;
+	two = (binary_tree_node_t *)f2;
+	n1 = (symbol_t *)one->data;
+	n2 = (symbol_t *)two->data;
 
-	return (n1 - n2);
+	return ((int)n1->freq - (int)n2->freq);
 }
 
 /**
