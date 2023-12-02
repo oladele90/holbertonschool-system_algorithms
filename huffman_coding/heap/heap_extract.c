@@ -57,22 +57,21 @@ void heapify_down(heap_t *heap)
 {
 	binary_tree_node_t *current = heap->root;
 	binary_tree_node_t *child;
-	void *temp;
 
 	if (!heap || !heap->root)
 		return;
 
-	while (current)
+	while (current->left || current->right)
 	{
 		child = current->left;
 
-		if (child && current->right &&
-			heap->data_cmp(child->data, current->right->data) > 0)
+		if (current->right && heap->data_cmp(current->right->data, child->data) < 0)
 			child = current->right;
 
-		if (child && heap->data_cmp(child->data, current->data) > 0)
+		if (heap->data_cmp(child->data, current->data) < 0)
 		{
-			temp = current->data;
+			void *temp = current->data;
+
 			current->data = child->data;
 			child->data = temp;
 			current = child;
@@ -103,6 +102,7 @@ void *heap_extract(heap_t *heap)
 
 	*min_value = get_last_node(heap);
 	heap->size--;
+	heapify_down(heap);
 
 	return ((void *)min_value);
 }
