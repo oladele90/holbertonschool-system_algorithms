@@ -9,7 +9,7 @@
  *
  * Return: The difference in frequencies (f1 - f2).
  */
-static int data_cmp(void *f1, void *f2)
+int data_cmp(void *f1, void *f2)
 {
 	symbol_t *n1, *n2;
 	binary_tree_node_t *one, *two;
@@ -41,6 +41,7 @@ heap_t *huffman_priority_queue(char *data, size_t *freq, size_t size)
 	new_heap = heap_create(data_cmp);
 	if (!new_heap)
 		return (NULL);
+	new_heap->root = NULL;
 
 	while (idx < size)
 	{
