@@ -36,30 +36,40 @@ void heapify(heap_t *heap, binary_tree_node_t *node)
 		free(smallest->right);
 	}
 }
+#include <stdlib.h>
+
 /**
- * get_last_node - Finds the last node in the heap.
+ * get_last_node - Finds the last node in the heap using level order traversal.
  * @heap: Pointer to the heap structure.
  *
  * Return: Pointer to the last node.
  */
-
 binary_tree_node_t *get_last_node(heap_t *heap)
 {
-	binary_tree_node_t *current = heap->root;
+	binary_tree_node_t *current;
+    binary_tree_node_t *Q[50];
+	binary_tree_node_t *last_node;
+    int idx = 0, count = 0;
 
-	if (heap->size == 0)
-		return (NULL);
+    if (heap->size == 0 || heap->root == NULL)
+        return (NULL);
+    Q[count++] = heap->root;
 
-	while (current->left != NULL || current->right != NULL)
-	{
-		if (current->left != NULL)
-			current = current->left;
-		else
-			current = current->right;
-	}
+    while (idx < count)
+    {
+        current = Q[idx++];
 
-	return (current);
+        if (current->left != NULL)
+            Q[count++] = current->left;
+        if (current->right != NULL)
+            Q[count++] = current->right;
+    }
+
+    last_node = Q[count - 1];
+
+    return (last_node);
 }
+
 
 /**
  * heap_extract - Extracts the minimum element from the min heap.
