@@ -66,7 +66,6 @@ binary_tree_node_t *get_last_node(heap_t *heap)
     }
 
     last_node = Q[count - 1];
-
     return (last_node);
 }
 

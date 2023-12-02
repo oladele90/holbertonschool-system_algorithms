@@ -41,14 +41,17 @@ void heap_delete(heap_t *heap, void (*free_data)(void *))
 {
 	binary_tree_node_t *node;
 
-	if (heap->size == 0 || !free_data)
+	if (heap->size == 0)
 		return;
 
-	while (heap->size > 0)
+	while (heap->size > 1)
 	{
 		node = get_last_nod(heap);
-		free_data(node);
-		free(node);
+		if (node)
+		{
+			free_data(node->data);
+			free(node);
+		}
 		heap->size--;
 	}
 	free(heap);
