@@ -1,25 +1,40 @@
 #include "heap.h"
 
+/**
+ * heapify - Maintains the min-heap property by fixing a potential violation
+ *           at the given node.
+ * @heap: Pointer to the heap structure.
+ * @node: Pointer to the node where the heap property may be violated.
+*/
+
 void heapify(heap_t *heap, binary_tree_node_t *node)
 {
-    binary_tree_node_t *smallest = node;
-    binary_tree_node_t *left_child = node->left;
-    binary_tree_node_t *right_child = node->right;
+	binary_tree_node_t *smallest = node;
+	binary_tree_node_t *l_child = node->left;
+	binary_tree_node_t *r_child = node->right;
 
-    if (left_child != NULL && heap->data_cmp(left_child->data, smallest->data) < 0)
-        smallest = left_child;
+	if (l_child != NULL && heap->data_cmp(l_child->data, smallest->data) < 0)
+		smallest = l_child;
 
-    if (right_child != NULL && heap->data_cmp(right_child->data, smallest->data) < 0)
-        smallest = right_child;
+	if (r_child != NULL && heap->data_cmp(r_child->data, smallest->data) < 0)
+		smallest = r_child;
 
-    if (smallest != node)
+	if (smallest != node)
 	{
-        void *temp = node->data;
-        node->data = smallest->data;
-        smallest->data = temp;
+		void *temp = node->data;
 
-        heapify(heap, smallest);
-    }
+		node->data = smallest->data;
+		smallest->data = temp;
+
+		heapify(heap, smallest);
+	}
+
+	if (smallest->right == r_child && smallest->left == NULL)
+	{
+		smallest->left = smallest->right;
+		smallest->right = NULL;
+		free(smallest->right);
+	}
 }
 /**
  * get_last_node - Finds the last node in the heap.
@@ -32,18 +47,18 @@ binary_tree_node_t *get_last_node(heap_t *heap)
 {
 	binary_tree_node_t *current = heap->root;
 
-    if (heap->size == 0)
-        return (NULL);
+	if (heap->size == 0)
+		return (NULL);
 
-    while (current->left != NULL || current->right != NULL)
+	while (current->left != NULL || current->right != NULL)
 	{
-        if (current->left != NULL)
+		if (current->left != NULL)
 			current = current->left;
-        else
-            current = current->right;
-    }
+		else
+			current = current->right;
+	}
 
-    return (current);
+	return (current);
 }
 
 /**
@@ -58,31 +73,31 @@ void *heap_extract(heap_t *heap)
 	void *min_element = heap->root->data;
 	binary_tree_node_t *last_node;
 
-    if (heap->size == 0)
-        return NULL;
+	if (heap->size == 0)
+		return (NULL);
 
-    if (heap->size == 1)
+	if (heap->size == 1)
 	{
-        free(heap->root);
-        heap->root = NULL;
-        heap->size = 0;
-        return (min_element);
-    }
+		free(heap->root);
+		heap->root = NULL;
+		heap->size = 0;
+		return (min_element);
+	}
 
-    last_node = get_last_node(heap);
+	last_node = get_last_node(heap);
 
-    heap->root->data = last_node->data;
+	heap->root->data = last_node->data;
 
-    if (last_node->parent->left == last_node)
-        last_node->parent->left = NULL;
-    else
-        last_node->parent->right = NULL;
+	if (last_node->parent->left == last_node)
+		last_node->parent->left = NULL;
+	else
+		last_node->parent->right = NULL;
 
-    free(last_node);
+	free(last_node);
 
-    heapify(heap, heap->root);
+	heapify(heap, heap->root);
 
-    heap->size--;
+	heap->size--;
 
-    return (min_element);
+	return (min_element);
 }
