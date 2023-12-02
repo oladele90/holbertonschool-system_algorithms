@@ -9,7 +9,7 @@
  *
  * Return: The difference in frequencies (f1 - f2).
  */
-int data_cmp(void *f1, void *f2)
+static int data_cmp(void *f1, void *f2)
 {
 	symbol_t *n1, *n2;
 	binary_tree_node_t *one, *two;
