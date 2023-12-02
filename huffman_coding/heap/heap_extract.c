@@ -1,21 +1,21 @@
 #include "heap.h"
 
 /**
- * get_last_node - Removes and returns the last node from the heap
- * @heap: Pointer to the heap structure
+ * get_last_node - Gets the value of the last node in the heap and removes it.
+ * @heap: Pointer to the heap structure.
  *
- * Return: Value stored in the last node
+ * Return: The value of the last node.
  */
 size_t get_last_node(heap_t *heap)
 {
     binary_tree_node_t *Q[50];
-    size_t count = 0, idx = 0, last_index;
+    size_t count = 0, idx = 0;
     size_t min = 0;
+    size_t last_index = heap->size - 1;
 
-    if (!heap || !heap->root || heap->size == 0)
+    if (!heap || !heap->root)
         return 0;
 
-    last_index = heap->size - 1;
     Q[idx] = heap->root;
 
     while (count < last_index)
@@ -49,8 +49,8 @@ size_t get_last_node(heap_t *heap)
 }
 
 /**
- * heapify_down - Maintains the heap property by fixing a violation at the root
- * @heap: Pointer to the heap structure
+ * heapify_down - Maintains the heap property by fixing violations.
+ * @heap: Pointer to the heap structure.
  */
 void heapify_down(heap_t *heap)
 {
@@ -60,11 +60,11 @@ void heapify_down(heap_t *heap)
     if (!heap || !heap->root)
         return;
 
-    while (current)
+    while (current->left || current->right)
     {
         child = current->left;
 
-        if (child && current->right && heap->data_cmp(child->data, current->right->data) < 0)
+        if (current->right && (!child || heap->data_cmp(current->right->data, child->data) < 0))
             child = current->right;
 
         if (child && heap->data_cmp(child->data, current->data) < 0)
@@ -82,26 +82,25 @@ void heapify_down(heap_t *heap)
 }
 
 /**
- * heap_extract - Extracts the root node from the heap
- * @heap: Pointer to the heap structure
+ * heap_extract - Extracts the minimum value from the heap.
+ * @heap: Pointer to the heap structure.
  *
- * Return: Pointer to the extracted value
+ * Return: Pointer to the extracted minimum value.
  */
 void *heap_extract(heap_t *heap)
 {
-    size_t min_value;
-	size_t *result;
+    size_t *min_value;
 
     if (!heap)
         return NULL;
 
-    min_value = get_last_node(heap);
-    heap->size--;
-
-    result = malloc(sizeof(size_t));
-    if (!result)
+    min_value = malloc(sizeof(size_t));
+    if (!min_value)
         return NULL;
 
-    *result = min_value;
-    return (void *)result;
+    *min_value = get_last_node(heap);
+    heap->size--;
+	heapify_down(heap);
+
+    return (void *)min_value;
 }
