@@ -39,11 +39,13 @@ heap_t *huffman_priority_queue(char *data, size_t *freq, size_t size)
 	size_t idx = 0;
 
 	new_heap = heap_create(data_cmp);
+	if (!new_heap)
+		return (NULL);
 
 	while (idx < size)
 	{
 		new_sym = symbol_create(data[idx], freq[idx]);
-		new_node = binary_tree_node(new_heap->root, new_sym);
+		new_node = binary_tree_node(NULL, new_sym);
 		heap_insert(new_heap, new_node);
 		idx++;
 	}
