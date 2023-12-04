@@ -17,7 +17,7 @@ int huffman_extract_and_insert(heap_t *priority_queue)
 	binary_tree_node_t *node;
 	symbol_t *symbol;
 
-	if (!priority_queue || priority_queue->size < 2)
+	if (!priority_queue)
 		return (0);
 
 	symbol = symbol_create(-1, ((symbol_t *)node1->data)->freq +
