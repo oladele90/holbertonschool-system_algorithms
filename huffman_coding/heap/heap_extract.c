@@ -13,11 +13,11 @@ void heapify(heap_t *heap, binary_tree_node_t *node)
 	binary_tree_node_t *l_child = node->left;
 	binary_tree_node_t *r_child = node->right;
 
-	if (l_child != NULL && heap->data_cmp(l_child->data, smallest->data) < 0)
-		smallest = l_child;
-
-	if (r_child != NULL && heap->data_cmp(r_child->data, smallest->data) < 0)
+	if (r_child != NULL && heap->data_cmp(r_child->data, smallest->data) <= 0)
 		smallest = r_child;
+
+	if (l_child != NULL && heap->data_cmp(l_child->data, smallest->data) <= 0)
+		smallest = l_child;
 
 	if (smallest != node)
 	{
@@ -29,14 +29,13 @@ void heapify(heap_t *heap, binary_tree_node_t *node)
 		heapify(heap, smallest);
 	}
 
-	if (smallest->right == r_child && smallest->left == NULL)
+	/*if (smallest->right == r_child && smallest->left == NULL)
 	{
 		smallest->left = smallest->right;
 		smallest->right = NULL;
 		free(smallest->right);
-	}
+	}*/
 }
-#include <stdlib.h>
 
 /**
  * get_last_node - Finds the last node in the heap using level order traversal.
