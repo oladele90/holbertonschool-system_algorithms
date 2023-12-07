@@ -28,13 +28,6 @@ void heapify(heap_t *heap, binary_tree_node_t *node)
 
 		heapify(heap, smallest);
 	}
-
-	/*if (smallest->right == r_child && smallest->left == NULL)
-	{
-		smallest->left = smallest->right;
-		smallest->right = NULL;
-		free(smallest->right);
-	}*/
 }
 
 /**
@@ -46,26 +39,26 @@ void heapify(heap_t *heap, binary_tree_node_t *node)
 binary_tree_node_t *get_last_node(heap_t *heap)
 {
 	binary_tree_node_t *current;
-    binary_tree_node_t *Q[50];
+	binary_tree_node_t *Q[50];
 	binary_tree_node_t *last_node;
-    int idx = 0, count = 0;
+	int idx = 0, count = 0;
 
-    if (heap->size == 0 || heap->root == NULL)
-        return (NULL);
-    Q[count++] = heap->root;
+	if (heap->size == 0 || heap->root == NULL)
+		return (NULL);
+	Q[count++] = heap->root;
 
-    while (idx < count)
-    {
-        current = Q[idx++];
+	while (idx < count)
+	{
+		current = Q[idx++];
 
-        if (current->left != NULL)
-            Q[count++] = current->left;
-        if (current->right != NULL)
-            Q[count++] = current->right;
-    }
+		if (current->left != NULL)
+			Q[count++] = current->left;
+		if (current->right != NULL)
+			Q[count++] = current->right;
+	}
 
-    last_node = Q[count - 1];
-    return (last_node);
+	last_node = Q[count - 1];
+	return (last_node);
 }
 
 
