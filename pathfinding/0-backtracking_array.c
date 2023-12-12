@@ -2,25 +2,25 @@
 
 point_t *right(point_t *start)
 {
-    start->x++;
+    start->y++;
     return (start);
 }
 
 point_t *down(point_t *start)
 {
-    start->y++;
+    start->x++;
     return (start);
 }
 
 point_t *left(point_t *start)
 {
-    start->x--;
+    start->y--;
     return (start);
 }
 
 point_t *up(point_t *start)
 {
-    start->y--;
+    start->x--;
     return (start);
 }
 
@@ -37,10 +37,10 @@ int find_path(queue_t *new, char **map, int rows, int cols, point_t *start, poin
 {
     int on_target_path = 0;
 
+    printf("Checking coordinates [%d, %d]\n", start->x, start->y);
+
     if (start->x >= rows || start->y >= cols)
         return (0);
-
-    printf("Checking coordinates [%d, %d]\n", start->x, start->y);
 
     if (start->x == target->x && start->y == target->y)
     {
