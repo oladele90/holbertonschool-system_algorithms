@@ -2,30 +2,41 @@
 
 point_t *right(point_t *start)
 {
-    start->y++;
+    start->x++;
     return (start);
 }
 
 point_t *down(point_t *start)
 {
-    start->x++;
+    start->y++;
     return (start);
 }
 
 point_t *left(point_t *start)
 {
-    start->y--;
+    start->x--;
     return (start);
 }
 
 point_t *up(point_t *start)
 {
-    start->x--;
+    start->y--;
     return (start);
+}
+
+point_t *pointdup(point_t *start)
+{
+    point_t *new_point = malloc(sizeof(point_t));
+
+    new_point->x = start->x;
+    new_point->y = start->y;
+    return (new_point);
 }
 
 queue_t *find_path(queue_t *new, char **map, int rows, int cols, point_t *start, point_t const *target)
 {
+    int on_target_path = 0;
+
     if (start->x >= rows || start->y >= cols)
         return (new);
 
@@ -38,27 +49,33 @@ queue_t *find_path(queue_t *new, char **map, int rows, int cols, point_t *start,
         return (new);
     }
 
-    if (map[start->x][start->y] == '1')
+    if (map[start->y][start->x] == '0')
     {
-        printf("in here\n");
-        queue_push_front(new, start);
-
-        if (find_path(new, map, rows, cols, right(start), target) )
-            return (new);
-        start = left(start);
+        
+        if (find_path(new, map, rows, cols, right(start), target))
+            on_target_path = 1;
+        left(start);
         if (find_path(new, map, rows, cols, down(start), target))
-            return (new);
-        /*up(start);*/
+            on_target_path = 1;
+        up(start);
         if (find_path(new, map, rows, cols, left(start), target))
-            return (new);
-        /*right(start);*/
+            on_target_path = 1;
+        right(start);
         if (find_path(new, map, rows, cols, up(start), target))
+            on_target_path = 1;
+        down(start);
+
+        if (on_target_path)
+        {
+            map[start->y][start->x] = '1';
+            queue_push_front(new, pointdup(start));
             return (new);
-        /*down(start);*/
+        }
 
         dequeue(new);
+
     }
-    return (new);
+    return (NULL);
 }
 queue_t *backtracking_array(char **map, int rows, int cols, point_t const *start, point_t const *target)
 {
