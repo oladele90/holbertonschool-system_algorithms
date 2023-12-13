@@ -77,5 +77,10 @@ queue_t *backtracking_graph(graph_t *graph, vertex_t const *start,
 	Q = queue_create();
 	find_graph_path(graph, start, target, Q, visited);
 	graph_delete(visited);
+	if (Q->front)
+	{
+		free(Q);
+		return (NULL);
+	}
 	return (Q);
 }
