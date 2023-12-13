@@ -1,99 +1,140 @@
 #include "pathfinding.h"
 
-point_t *right(point_t *start)
+/**
+ * was_visited - checks if a cell has been visited
+ * @visited: the visited array
+ * @x: the x coordinate
+ * @y: the y coordinate
+ * Return: 1 if has been visited, else 0
+ */
+static int was_visited(char **visited, int x, int y)
 {
-    start->y++;
-    return (start);
+	return (visited[y][x] == '1');
 }
 
-point_t *down(point_t *start)
+/**
+ * point_dup - allocate a point struct onto the heap
+ * @point: the point to be copied
+ * Return: the copied point
+ */
+static point_t *point_dup(point_t *point)
 {
-    start->x++;
-    return (start);
+	point_t *copy = malloc(sizeof(point_t));
+
+	copy->x = point->x;
+	copy->y = point->y;
+	return (copy);
 }
 
-point_t *left(point_t *start)
+/**
+ * can_visit - checks if the next move is valid
+ * @map: the map being navigated
+ * @rows: number of rows
+ * @cols: number of cols
+ * @next_move: coordinates of the next attempted move
+ * Return: 1 if valid move, else 0
+ */
+static int can_visit(char **map, int rows, int cols, point_t *next_move)
 {
-    start->y--;
-    return (start);
+	int x = next_move->x;
+	int y = next_move->y;
+
+	return (x < rows && x >= 0 && y < cols && y >= 0 && map[y][x] == '0');
 }
 
-point_t *up(point_t *start)
+/**
+ * find_path - solves a maze using backtracking
+ * @map: the map to navigate
+ * @rows: number of rows
+ * @cols: number of cols
+ * @current: coordinates of the current position
+ * @target: coordinates of the target position
+ * @queue: the queue that holds the final path
+ * @visited: array to keep track of visited cells
+ * Return: 1 if found path, else 0
+ */
+static int find_path(char **map, int rows, int cols, point_t *current,
+					  point_t *target, queue_t *queue, char **visited)
 {
-    start->x--;
-    return (start);
+	point_t next_move, *next_move_dup;
+
+	int directions[4][2] = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
+	int on_target_path = 0, i;
+
+	printf("Checking coordinates [%d, %d]\n", current->x, current->y);
+	visited[current->y][current->x] = '1';
+
+	if (current->x == target->x && current->y == target->y)
+	{
+		next_move_dup = point_dup(current);
+		queue_push_front(queue, (void *)next_move_dup);
+		return (1);
+	}
+
+	for (i = 0; i < 4; ++i)
+	{
+		next_move.x = current->x + directions[i][0];
+		next_move.y = current->y + directions[i][1];
+
+		if (can_visit(map, rows, cols, &next_move) &&
+			!was_visited(visited, next_move.x, next_move.y))
+		{
+			on_target_path += find_path(map, rows, cols, &next_move,
+										target, queue, visited);
+		}
+
+		if (on_target_path)
+			break;
+	}
+
+	if (on_target_path)
+	{
+		queue_push_front(queue, (void *)point_dup(current));
+		return (1);
+	}
+
+	return (0);
 }
 
-point_t *pointdup(point_t *start)
+/**
+ * backtracking_array - finds a path using backtracking
+ * @map: the map to navigate
+ * @rows: number of rows
+ * @cols: number of cols
+ * @start: the starting coordinates
+ * @target: the target coordinates
+ * Return: queue with the path to target
+ */
+queue_t *backtracking_array(char **map, int rows, int cols,
+							 point_t const *start, point_t const *target)
 {
-    point_t *new_point = malloc(sizeof(point_t));
+	int i;
+	queue_t *queue;
+	point_t *current = malloc(sizeof(point_t));
+	point_t *finish = malloc(sizeof(point_t));
+	char **visited = (char **)calloc(rows, sizeof(char *));
 
-    new_point->x = start->x;
-    new_point->y = start->y;
-    return (new_point);
-}
+	for (i = 0; i < rows; ++i)
+		visited[i] = (char *)calloc(cols, sizeof(char));
 
-int find_path(queue_t *new, char **map, int rows, int cols, point_t *start, point_t const *target, char **visited)
-{
-    int on_target_path = 0;
+	queue = queue_create();
+	*current = *start;
+	*finish = *target;
+	find_path(map, rows, cols, current, finish, queue, visited);
 
-    printf("Checking coordinates [%d, %d]\n", start->x, start->y);
+	if (!queue->front)
+	{
+		free(queue);
+		queue = NULL;
+	}
 
-    if (start->x >= rows || start->y >= cols)
-        return (0);
+	free(current);
+	free(finish);
 
-    if (start->x == target->x && start->y == target->y)
-    {
-        queue_push_front(new, (void *)pointdup(start));
-        return (1);
-    }
-    visited[start->y][start->x] = '1';
-    on_target_path += find_path(new, map, rows, cols, right(start), target, visited);
-    left(start);
-    if (on_target_path)
-    {
-        queue_push_front(new, (void *)pointdup(start));
-        return (1);
-    }
-    on_target_path += find_path(new, map, rows, cols, down(start), target, visited);
-    up(start);
-    if (on_target_path)
-    {
-        queue_push_front(new, (void *)pointdup(start));
-        return (1);
-    }
-    on_target_path += find_path(new, map, rows, cols, left(start), target, visited);
-    right(start);
-    if (on_target_path)
-    {
-        queue_push_front(new, (void *)pointdup(start));
-        return (1);
-    }
-    on_target_path += find_path(new, map, rows, cols, up(start), target, visited);
-    down(start);
+	for (i = 0; i < rows; ++i)
+		free(visited[i]);
 
-    if (on_target_path)
-    {
-        queue_push_front(new, (void *)pointdup(start));
-        return (1);
-    }
+	free(visited);
 
-    return (0);
-}
-queue_t *backtracking_array(char **map, int rows, int cols, point_t const *start, point_t const *target)
-{
-    int i;
-    point_t *temp = malloc(sizeof(point_t));
-    queue_t *new = queue_create();
-    char **visited = (char **)calloc(rows, sizeof(char *));
-
-    for (i = 0; i < rows; ++i)
-        visited[i] = (char *)calloc(cols, sizeof(char));
-
-    temp->x = start->x;
-    temp->y = start->y;
-
-    find_path(new, map, rows, cols, temp, target, visited);
-
-    return (new);
+	return (queue);
 }
