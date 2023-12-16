@@ -6,12 +6,13 @@
  */
 void nary_tree_delete(nary_tree_t *tree)
 {
-	nary_tree_t *child = tree->children;
+	nary_tree_t *child;
 	nary_tree_t *next_child;
 
 	if (!tree)
 		return;
-
+	
+	child = tree->children;
 	while (child)
 	{
 		next_child = child->next;
